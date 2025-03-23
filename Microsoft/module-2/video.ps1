@@ -1,0 +1,1 @@
+Clear-Host; $screen = Get-WmiObject -Query "SELECT ScreenWidth, ScreenHeight FROM Win32_DesktopMonitor WHERE Availability=3"; $x = $screen.ScreenWidth/2; $y = $screen.ScreenHeight/2; .\ffplay.exe -x $x -y $y ".\video.mkv"

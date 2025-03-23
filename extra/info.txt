@@ -1,0 +1,7 @@
+Contains extra files for the program
+Run change_video.ps1 to switch video (or rename video to video.mkv and copy to \Microsoft\module-2\video.mkv)
+
+Video 0 source = https://www.youtube.com/watch?v=dQw4w9WgXcQ
+Video 1 source = ?
+Video 2 source = https://www.youtube.com/watch?v=zym3bLTrOHE
+Video 3 source = https://www.youtube.com/watch?v=fVAh0YiVWuY

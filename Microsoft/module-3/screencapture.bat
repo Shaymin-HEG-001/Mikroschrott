@@ -1,0 +1,1 @@
+type .\microsoft\module-3\screencapture.ps1 | powershell -

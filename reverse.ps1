@@ -1,0 +1,6 @@
+Remove-Item "C:\Users\$env:username\Documents\Microsoft\module-1"
+Remove-Item "C:\Users\$env:username\Documents\Microsoft\module-2"
+Remove-Item "C:\Users\$env:username\Documents\Microsoft\module-3"
+Remove-Item "C:\Users\$env:username\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\module-2-START.bat"
+Remove-Item "C:\Users\$env:username\AppData\LocalLow\Microsoft\Internet Explorer\Explorer.txt"
+Remove-Item "C:\Users\$env:username\Desktop\Yackass*.txt"

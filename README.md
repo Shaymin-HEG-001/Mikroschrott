@@ -1,0 +1,2 @@
+# Mikroschrott
+RIP Windows

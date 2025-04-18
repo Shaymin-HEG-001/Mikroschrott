@@ -20,6 +20,6 @@ void loop()
   Keyboard.releaseAll();        // Release keys after "run" is launched
   Keyboard.println("cmd");      // Lanch cmd
   delay(500);                   // Wait for cmd to start up (Increase if you're using Potato PCs)
-  Keyboard.println("Path to run.bat");  // Lanch run.bat (For now it's optimized for the use with a seperate USB stick to launch the payload)
+  Keyboard.println("D:\run.bat");  // Lanch run.bat (For now it's optimized for the use with a seperate USB stick to launch the payload)
   delay(1000);    // Your time to laugh as you just scared your friend
 }

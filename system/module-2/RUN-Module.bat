@@ -7,5 +7,5 @@ start /MIN "" ".\100.bat"
 start /MIN "" ".\video.bat"
 start /MIN "" ".\mouse.bat"
 start /MIN "" ".\file-L.bat"
-::start /MIN "" ".\mariorun.bat" // not working
+start /MIN "" ".\wallpaper.bat"
 exit 0

@@ -1,3 +1,4 @@
+# Register this Module as a Scheduled Task that runs at Logon
 $location = Get-Location
 $trigger = New-ScheduledTaskTrigger -AtLogon -User $env:USERNAME
 $User = $env:USERNAME

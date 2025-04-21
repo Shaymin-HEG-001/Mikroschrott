@@ -1,3 +1,4 @@
+# Reverse everything
 Remove-Item -Recurse -Force "C:\Users\$env:username\Documents\Microsoft\module-1"
 Remove-Item -Recurse -Force "C:\Users\$env:username\Documents\Microsoft\module-2"
 Remove-Item -Recurse -Force "C:\Users\$env:username\Documents\Microsoft\module-3"

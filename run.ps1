@@ -8,6 +8,7 @@ $_resourcesPath = "${location}\extra"
 # Script Settings
 $video = 2
 
+# Export Variables to Modules
 function exportVars {
     [string]$FilePath = "vars.txt"
     $variables = Get-Variable

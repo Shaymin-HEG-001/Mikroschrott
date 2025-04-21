@@ -1,8 +1,1 @@
 Contains extra files for the program
-To change video edit $video in run.ps1
-
-Video 0 source = https://www.youtube.com/watch?v=dQw4w9WgXcQ
-Video 1 source = ?
-Video 2 source = https://www.youtube.com/watch?v=zym3bLTrOHE
-Video 3 source = https://www.youtube.com/watch?v=fVAh0YiVWuY
-Video 4 source = https://www.youtube.com/watch?v=vIdXuSx5Iyo

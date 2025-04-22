@@ -8,5 +8,7 @@ Remove-Item -Recurse -Force "C:\Users\$env:username\Desktop\Yackass*.txt"
 Remove-Item -Recurse -Force "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\clear.bat"
 Remove-Item -Recurse -Force "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\module-2-START-AUTO.bat"
 
-Start-Sleep -Seconds 1
-Unregister-ScheduledTask -TaskName "SecurityScan"
+$names = ("SecurityScan", "ScanHelper", "WinDiagnostics", "MicrosoftService", "SSDCleaner")
+foreach ($i in $names) { 
+    Unregister-ScheduledTask -TaskName $i
+}

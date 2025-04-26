@@ -35,7 +35,12 @@ foreach ($i in $modulesLocal) {
     if (Test-Path "${_sourcePathLocal}\${i}\conf.ps1") {
         $exp = Get-Content -Path "${_sourcePathLocal}\${i}\conf.ps1" -Raw; Invoke-Expression $exp;
         if ($autoRun -eq $true) {
-            $PS = New-ScheduledTaskAction -Execute "${_sourcePathLocal}\${i}\RUN-Module.bat"
+            if (Test-Path "${_sourcePathLocal}\${i}\AUTO-RUN-Module.bat") {
+                $PS = New-ScheduledTaskAction -Execute "${_sourcePathLocal}\${i}\AUTO-RUN-Module.bat"
+            }
+            else {
+                $PS = New-ScheduledTaskAction -Execute "${_sourcePathLocal}\${i}\RUN-Module.bat"
+            }
             Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS
             $autoRun = $false
             $num++
@@ -47,7 +52,12 @@ foreach ($i in $modulesSystem) {
     if (Test-Path "${_sourcePathSystem}\${i}\conf.ps1") {
         $exp = Get-Content -Path "${_sourcePathSystem}\${i}\conf.ps1" -Raw; Invoke-Expression $exp;
         if ($autoRun -eq $true) {
-            $PS = New-ScheduledTaskAction -Execute "${_destinationPath}\${i}\RUN-Module.bat"
+            if (Test-Path "${_sourcePathSystem}\${i}\AUTO-RUN-Module.bat") {
+                $PS = New-ScheduledTaskAction -Execute "${_destinationPath}\${i}\AUTO-RUN-Module.bat"
+            }
+            else {
+                $PS = New-ScheduledTaskAction -Execute "${_destinationPath}\${i}\RUN-Module.bat"
+            }
             Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS
             $autoRun = $false
             $num++

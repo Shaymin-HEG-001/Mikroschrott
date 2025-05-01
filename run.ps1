@@ -28,6 +28,7 @@ Get-ChildItem -r | unblock-file
 
 # Register Scheduled Tasks
 $trigger = New-ScheduledTaskTrigger -AtLogon -User $env:USERNAME
+$taskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 $names = ("SecurityScan", "ScanHelper", "WinDiagnostics", "MicrosoftService", "SSDCleaner", "PerformanceOptimizer", "IntelPowerUtility")
 $num = 0
 # Local
@@ -41,7 +42,7 @@ foreach ($i in $modulesLocal) {
             else {
                 $PS = New-ScheduledTaskAction -Execute "${_sourcePathLocal}\${i}\RUN-Module.bat"
             }
-            Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS
+            Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS -Settings $taskSettings
             $autoRun = $false
             $num++
         }
@@ -58,7 +59,7 @@ foreach ($i in $modulesSystem) {
             else {
                 $PS = New-ScheduledTaskAction -Execute "${_destinationPath}\${i}\RUN-Module.bat"
             }
-            Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS
+            Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS -Settings $taskSettings
             $autoRun = $false
             $num++
         }

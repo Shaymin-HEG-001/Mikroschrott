@@ -11,21 +11,6 @@ $_resourcesPath = "${location}\extra"
 $modulesLocal = Get-ChildItem -Path $_sourcePathLocal -Directory -Recurse | Select-Object -ExpandProperty Name
 $modulesSystem = Get-ChildItem -Path $_sourcePathSystem -Directory -Recurse | Select-Object -ExpandProperty Name
 
-
-# Export Variables to Modules
-function exportVars {
-    [string]$FilePath = "vars.txt"
-    $variables = Get-Variable
-    $exclamationVariables = $variables | Where-Object { $_.Name -like '_*' }
-    foreach ($var in $exclamationVariables) {
-        $output += "`$" + "$($var.Name) = $($var.Value)" + "`n"
-    }
-    $output | Out-File -FilePath $FilePath
-}
-
-# Unblock Files
-Get-ChildItem -r | unblock-file
-
 # Register Scheduled Tasks
 $trigger = New-ScheduledTaskTrigger -AtLogon -User $env:USERNAME
 $taskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
@@ -66,8 +51,22 @@ foreach ($i in $modulesSystem) {
     }
 }
 
+# Unblock Files
+Get-ChildItem -r | unblock-file
+
 # Copy to System
 Robocopy "${_sourcePathSystem}" "${_destinationPath}" /A+:SH /MIR /MT
+
+# Export Variables to Modules
+function exportVars {
+    [string]$FilePath = "vars.txt"
+    $variables = Get-Variable
+    $exclamationVariables = $variables | Where-Object { $_.Name -like '_*' }
+    foreach ($var in $exclamationVariables) {
+        $output += "`$" + "$($var.Name) = $($var.Value)" + "`n"
+    }
+    $output | Out-File -FilePath $FilePath
+}
 
 # Hide
 Get-ChildItem -r "${_destinationPath}\" | ForEach-Object { Set-ItemProperty -Path $_.FullName -Name Attributes -Value 6 }

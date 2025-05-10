@@ -1,2 +1,3 @@
-Image Files for Module 2
+Image Files for module-2
 Edit $image in \system\module-2\conf.ps1
+Make sure images are in bmp format

@@ -10,6 +10,8 @@ $_resourcesPath = "${location}\extra"
 # Load Module Names/Paths
 $modulesLocal = Get-ChildItem -Path $_sourcePathLocal -Directory -Recurse | Select-Object -ExpandProperty Name
 $modulesSystem = Get-ChildItem -Path $_sourcePathSystem -Directory -Recurse | Select-Object -ExpandProperty Name
+# Check if silent
+if ($args -contains '-silent') { $silent = $true } else { $silent = $false }
 
 # Unblock Files
 Get-ChildItem -r | unblock-file
@@ -82,8 +84,13 @@ foreach ($i in $scriptsPowershell) { if ($i.EndsWith('.ps1')) { $exp = Get-Conte
 # Move to shell:startup
 Move-Item "${_destinationPath}\module-2\clear.bat" "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" -Force
 
-# Run local Modules
-foreach ($i in $modulesLocal) { Set-Location "${_sourcePathLocal}\${i}"; exportVars; Start-Process .\RUN-Module.bat }
+# Export Variables
+foreach ($i in $modulesLocal) { Set-Location "${_sourcePathLocal}\${i}"; exportVars }
+foreach ($i in $modulesSystem) { Set-Location "${_destinationPath}\${i}"; exportVars }
 
-# Run System Modules
-foreach ($i in $modulesSystem) { Set-Location "${_destinationPath}\${i}"; exportVars; Start-Process .\RUN-Module.bat }
+# Check if silent
+if ($args -notcontains '-silent') {
+    # Run Modules
+    foreach ($i in $modulesLocal) { Set-Location "${_sourcePathLocal}\${i}"; Start-Process .\RUN-Module.bat }
+    foreach ($i in $modulesSystem) { Set-Location "${_destinationPath}\${i}"; Start-Process .\RUN-Module.bat }
+}

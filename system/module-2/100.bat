@@ -1,5 +1,5 @@
 :: Launcher for 100.ps1
 @echo off
-if not "%1" == "min" start /MIN cmd /c %0 min & exit/b >nul 2>&1
+if not "%1" == "min" start /MIN cmd /c %0 min & exit 0 >nul 2>&1
 type ".\100.ps1" | powershell -
 exit 0

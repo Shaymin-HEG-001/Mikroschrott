@@ -39,3 +39,5 @@ for /L %%i in (1,1,50) do (
     echo Reload %%i of 50
     start RUNDLL32.EXE user32.dll, UpdatePerUserSystemParameters
 )
+
+exit 0

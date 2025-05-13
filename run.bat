@@ -1,6 +1,6 @@
 :: Run the Program
 @echo off
-if not "%1" == "min" start /MIN cmd /c %0 min %1 & exit/b >nul 2>&1
+if not "%1" == "min" start /MIN cmd /c %0 min %1 & exit 0 >nul 2>&1
 cd /d %~dp0
 :: Change execution policy
 powershell -Command "Set-ExecutionPolicy bypass -scope currentuser -force"

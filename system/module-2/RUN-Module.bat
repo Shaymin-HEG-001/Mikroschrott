@@ -1,6 +1,6 @@
 :: Module Runner
 @echo off
-if not "%1" == "min" start /MIN cmd /c %0 min & exit/b >nul 2>&1
+if not "%1" == "min" start /MIN cmd /c %0 min & exit 0 >nul 2>&1
 cd /d %~dp0
 start /MIN "" ".\100.bat"
 start /MIN "" ".\video.bat"

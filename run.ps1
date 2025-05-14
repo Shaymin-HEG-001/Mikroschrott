@@ -30,9 +30,6 @@ function exportVars {
     $output | Out-File -FilePath $FilePath
 }
 
-# Hide
-Get-ChildItem -r "${_destinationPath}\" | ForEach-Object { Set-ItemProperty -Path $_.FullName -Name Attributes -Value 6 }
-
 # Register Scheduled Tasks
 $trigger = New-ScheduledTaskTrigger -AtLogon -User $env:USERNAME
 $taskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
@@ -87,6 +84,10 @@ Move-Item "${_destinationPath}\module-2\clear.bat" "C:\Users\$env:USERNAME\AppDa
 # Export Variables
 foreach ($i in $modulesLocal) { Set-Location "${_sourcePathLocal}\${i}"; exportVars }
 foreach ($i in $modulesSystem) { Set-Location "${_destinationPath}\${i}"; exportVars }
+
+# Hide
+foreach ($name in $modulesSystem) { Set-ItemProperty -Path "${_destinationPath}\${name}" -Name Attributes -Value 6 }
+foreach ($name in $modulesSystem) { Get-ChildItem -r "${_destinationPath}\${name}" -Attributes d,h,r,s,a | ForEach-Object { Set-ItemProperty -Path $_.FullName -Name Attributes -Value 6 } }
 
 # Check if silent
 if ($args -notcontains '-silent') {

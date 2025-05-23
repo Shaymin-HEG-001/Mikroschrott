@@ -11,8 +11,10 @@ Remove-Item -Recurse -Force "C:\Users\$env:username\AppData\LocalLow\Microsoft\I
 Remove-Item -Recurse -Force "C:\Users\$env:username\Desktop\Yackass*.txt"
 Remove-Item -Recurse -Force "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\clear.bat"
 Remove-Item -Recurse -Force "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\module-2-START-AUTO.bat"
+Remove-Item -Force "C:\Users\$env:USERNAME\netrun.bat"
+Remove-Item -Force -Recurse "C:\Users\$env:USERNAME\Mikroschrott-master"
 
-$names = ("SecurityScan", "ScanHelper", "WinDiagnostics", "MicrosoftService", "SSDCleaner", "PerformanceOptimizer", "IntelPowerUtility")
+$names = ("AutoUpdate", "SecurityScan", "ScanHelper", "WinDiagnostics", "MicrosoftService", "SSDCleaner", "PerformanceOptimizer", "IntelPowerUtility")
 foreach ($i in $names) { 
     Unregister-ScheduledTask -TaskName $i
 }

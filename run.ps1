@@ -87,9 +87,6 @@ foreach ($i in $scriptsBatch) { if ($i.EndsWith('.bat')) { Start-Process $i } }
 $scriptsPowershell = Get-ChildItem -Path "${scripts}\powershell" -Recurse | Select-Object -ExpandProperty FullName
 foreach ($i in $scriptsPowershell) { if ($i.EndsWith('.ps1')) { $exp = Get-Content -Path $i -Raw; Invoke-Expression $exp; Set-Location $location } }
 
-# Move to shell:startup
-Move-Item "${_destinationPath}\module-2\clear.bat" "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" -Force
-
 # Export Variables
 foreach ($i in $modulesLocal) { Set-Location "${_sourcePathLocal}\${i}"; exportVars }
 foreach ($i in $modulesSystem) { Set-Location "${_destinationPath}\${i}"; exportVars }

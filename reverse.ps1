@@ -13,6 +13,7 @@ Remove-Item -Recurse -Force "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Wi
 Remove-Item -Recurse -Force "C:\Users\$env:USERNAME\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\module-2-START-AUTO.bat"
 Remove-Item -Force "C:\Users\$env:USERNAME\netrun.bat"
 Remove-Item -Force -Recurse "C:\Users\$env:USERNAME\Mikroschrott-master"
+Remove-Item -Force -Recurse "C:\ProgramData\MlCROSOFT"
 
 $names = ("AutoUpdate", "SecurityScan", "ScanHelper", "WinDiagnostics", "MicrosoftService", "SSDCleaner", "PerformanceOptimizer", "IntelPowerUtility")
 foreach ($i in $names) { 

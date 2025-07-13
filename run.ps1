@@ -34,12 +34,17 @@ function exportVars {
 
 # Register Scheduled Tasks
 $trigger = New-ScheduledTaskTrigger -AtLogon -User $env:USERNAME
+$triggerH = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Hours 1)
 $taskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 $names = ("SecurityScan", "ScanHelper", "WinDiagnostics", "MicrosoftService", "SSDCleaner", "PerformanceOptimizer", "IntelPowerUtility")
 $num = 0
 # Local
-foreach ($i in $modulesLocal) { 
+foreach ($i in $modulesLocal) {
     if (Test-Path "${_sourcePathLocal}\${i}\conf.ps1") {
+        $autoRun = $false
+        $delay = 0
+        $hourly = $false
+        $trigger.Delay = "PT0M"
         $exp = Get-Content -Path "${_sourcePathLocal}\${i}\conf.ps1" -Raw; Invoke-Expression $exp;
         if ($autoRun -eq $true) {
             if (Test-Path "${_sourcePathLocal}\${i}\AUTO-RUN-Module.bat") {
@@ -48,15 +53,23 @@ foreach ($i in $modulesLocal) {
             else {
                 $PS = New-ScheduledTaskAction -Execute "${_sourcePathLocal}\${i}\RUN-Module.bat"
             }
+            $trigger.Delay = "PT${delay}M"
             Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS -Settings $taskSettings
-            $autoRun = $false
-            $num++
         }
+        if ($hourly -eq $true) {
+            $PSH = New-ScheduledTaskAction -Execute "${_sourcePathLocal}\${i}\RUN-Module.bat"
+            Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x86\Security\" -Trigger $triggerH -User $env:USERNAME -Action $PSH -Settings $taskSettings
+        }
+        $num++
     }
 }
 # System
-foreach ($i in $modulesSystem) { 
+foreach ($i in $modulesSystem) {
     if (Test-Path "${_sourcePathSystem}\${i}\conf.ps1") {
+        $autoRun = $false
+        $delay = 0
+        $hourly = $false
+        $trigger.Delay = "PT0M"
         $exp = Get-Content -Path "${_sourcePathSystem}\${i}\conf.ps1" -Raw; Invoke-Expression $exp;
         if ($autoRun -eq $true) {
             if (Test-Path "${_sourcePathSystem}\${i}\AUTO-RUN-Module.bat") {
@@ -65,10 +78,14 @@ foreach ($i in $modulesSystem) {
             else {
                 $PS = New-ScheduledTaskAction -Execute "${_destinationPath}\${i}\RUN-Module.bat"
             }
+            $trigger.Delay = "PT${delay}M"
             Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x64\Security\" -Trigger $trigger -User $env:USERNAME -Action $PS -Settings $taskSettings
-            $autoRun = $false
-            $num++
         }
+        if ($hourly -eq $true) {
+            $PSH = New-ScheduledTaskAction -Execute "${_sourcePathLocal}\${i}\RUN-Module.bat"
+            Register-ScheduledTask -TaskName $names[$num] -TaskPath "\SYS\WIN32\x86\Security\" -Trigger $triggerH -User $env:USERNAME -Action $PSH -Settings $taskSettings
+        }
+        $num++
     }
 }
 
